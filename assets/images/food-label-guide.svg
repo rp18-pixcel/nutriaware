@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" fill="none">
+  <rect width="1200" height="700" rx="28" fill="#F5F9F3"/>
+  <rect x="120" y="80" width="520" height="540" rx="20" fill="#FFFFFF" stroke="#D9E5D4" stroke-width="8"/>
+  <rect x="150" y="118" width="460" height="54" rx="8" fill="#111827"/>
+  <text x="170" y="154" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="30" font-weight="700">Nutrition Facts</text>
+
+  <rect x="150" y="190" width="460" height="44" rx="6" fill="#EAF5E8"/>
+  <text x="170" y="218" fill="#10281D" font-family="Arial, sans-serif" font-size="22" font-weight="700">Serving Size 1 cup (228g)</text>
+
+  <line x1="150" y1="254" x2="610" y2="254" stroke="#111827" stroke-width="6"/>
+  <text x="170" y="292" fill="#111827" font-family="Arial, sans-serif" font-size="24" font-weight="700">Calories</text>
+  <text x="530" y="292" fill="#111827" font-family="Arial, sans-serif" font-size="30" font-weight="700">230</text>
+  <line x1="150" y1="312" x2="610" y2="312" stroke="#111827" stroke-width="4"/>
+
+  <text x="170" y="348" fill="#111827" font-family="Arial, sans-serif" font-size="21" font-weight="700">Total Fat 8g</text>
+  <text x="560" y="348" fill="#111827" font-family="Arial, sans-serif" font-size="20" font-weight="700">10%</text>
+  <line x1="150" y1="364" x2="610" y2="364" stroke="#D1D5DB" stroke-width="2"/>
+
+  <text x="170" y="396" fill="#111827" font-family="Arial, sans-serif" font-size="21" font-weight="700">Sodium 160mg</text>
+  <text x="560" y="396" fill="#111827" font-family="Arial, sans-serif" font-size="20" font-weight="700">7%</text>
+  <line x1="150" y1="412" x2="610" y2="412" stroke="#D1D5DB" stroke-width="2"/>
+
+  <text x="170" y="444" fill="#111827" font-family="Arial, sans-serif" font-size="21" font-weight="700">Total Carbohydrate 37g</text>
+  <text x="560" y="444" fill="#111827" font-family="Arial, sans-serif" font-size="20" font-weight="700">13%</text>
+  <line x1="150" y1="460" x2="610" y2="460" stroke="#D1D5DB" stroke-width="2"/>
+
+  <text x="170" y="492" fill="#111827" font-family="Arial, sans-serif" font-size="21" font-weight="700">Total Sugars 12g</text>
+  <line x1="150" y1="508" x2="610" y2="508" stroke="#D1D5DB" stroke-width="2"/>
+
+  <text x="170" y="540" fill="#111827" font-family="Arial, sans-serif" font-size="21" font-weight="700">Protein 3g</text>
+
+  <rect x="700" y="92" width="380" height="120" rx="18" fill="#EAF5E8"/>
+  <text x="730" y="135" fill="#2B7A4B" font-family="Arial, sans-serif" font-size="26" font-weight="700">1. Start with serving size</text>
+  <text x="730" y="170" fill="#1F5135" font-family="Arial, sans-serif" font-size="20">All values depend on this amount.</text>
+
+  <rect x="700" y="236" width="380" height="120" rx="18" fill="#FFF3D8"/>
+  <text x="730" y="279" fill="#B46A0E" font-family="Arial, sans-serif" font-size="26" font-weight="700">2. Check calories</text>
+  <text x="730" y="314" fill="#8D520B" font-family="Arial, sans-serif" font-size="20">Match this to your daily needs.</text>
+
+  <rect x="700" y="380" width="380" height="120" rx="18" fill="#FFE6DF"/>
+  <text x="730" y="423" fill="#AF4D2B" font-family="Arial, sans-serif" font-size="26" font-weight="700">3. Watch sodium and sugar</text>
+  <text x="730" y="458" fill="#8F3D20" font-family="Arial, sans-serif" font-size="20">Lower values are better for frequent foods.</text>
+
+  <rect x="700" y="524" width="380" height="96" rx="18" fill="#E8F1FF"/>
+  <text x="730" y="566" fill="#295D99" font-family="Arial, sans-serif" font-size="26" font-weight="700">4. Compare labels</text>
+  <text x="730" y="598" fill="#254F81" font-family="Arial, sans-serif" font-size="20">Pick options with better nutrient balance.</text>
+</svg>
