@@ -15,6 +15,26 @@ body.page-surface {
     linear-gradient(180deg, #eef7eb 0%, #f8fcf1 48%, #eff8f4 100%);
 }
 
+main {
+  isolation: isolate;
+}
+
+.display-title {
+  position: relative;
+  display: inline-block;
+  letter-spacing: 0.01em;
+}
+
+.display-title::after {
+  content: "";
+  display: block;
+  width: 60%;
+  height: 10px;
+  border-radius: 9999px;
+  margin-top: 8px;
+  background: linear-gradient(90deg, rgba(154, 209, 90, 0.72), rgba(246, 195, 74, 0.32));
+}
+
 .header-glass {
   box-shadow: 0 8px 26px rgba(16, 40, 29, 0.09);
 }
@@ -108,6 +128,24 @@ body.page-surface {
   background: linear-gradient(90deg, rgba(43, 122, 75, 0), rgba(43, 122, 75, 0.22), rgba(43, 122, 75, 0));
 }
 
+.section-tint-a::after,
+.section-tint-b::after {
+  content: "";
+  position: absolute;
+  inset: 24px 8px 24px 8px;
+  border-radius: 26px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.section-tint-a::after {
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.45), rgba(234, 245, 232, 0.4));
+}
+
+.section-tint-b::after {
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.34), rgba(255, 239, 210, 0.3));
+}
+
 .chip,
 .active-chip {
   border: 1px solid rgba(43, 122, 75, 0.35);
@@ -137,6 +175,7 @@ body.page-surface {
 .rounded-3xl.bg-white {
   border: 1px solid var(--line-soft);
   transition: transform 0.22s ease, box-shadow 0.25s ease;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.86));
 }
 
 .rounded-2xl.bg-white:hover,
@@ -161,6 +200,30 @@ button:active {
   transform: translateY(1px);
 }
 
+#foodGrid article img,
+#food-gallery figure img {
+  transition: transform 0.35s ease, filter 0.3s ease;
+}
+
+#foodGrid article:hover img,
+#food-gallery figure:hover img {
+  transform: scale(1.03);
+  filter: saturate(1.05);
+}
+
+#food-gallery figure {
+  overflow: hidden;
+}
+
+.stats-strip > div {
+  border-right: 1px solid rgba(43, 122, 75, 0.16);
+  padding-right: 0.75rem;
+}
+
+.stats-strip > div:last-child {
+  border-right: none;
+}
+
 .reveal-on-scroll {
   opacity: 0;
   transform: translateY(18px);
@@ -176,5 +239,15 @@ button:active {
   .hero-orb-one,
   .hero-orb-two {
     opacity: 0.6;
+  }
+
+  .stats-strip > div {
+    border-right: none;
+    border-bottom: 1px solid rgba(43, 122, 75, 0.12);
+    padding-bottom: 0.5rem;
+  }
+
+  .stats-strip > div:last-child {
+    border-bottom: none;
   }
 }
