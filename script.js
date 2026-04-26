@@ -78,6 +78,8 @@ const state = {
   searchText: ""
 };
 
+document.documentElement.classList.add("js-reveal");
+
 const categoryImages = {
   fruits: "assets/images/fruits-basket.svg",
   vegetables: "assets/images/veggie-board.svg",
@@ -244,6 +246,17 @@ function formatNumber(value) {
   return Number.isInteger(value) ? String(value) : value.toFixed(1);
 }
 
+function readJsonStorage(key, fallback) {
+  try {
+    const rawValue = localStorage.getItem(key);
+    if (!rawValue) return fallback;
+    const parsed = JSON.parse(rawValue);
+    return parsed && typeof parsed === "object" ? parsed : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 function renderFoodGrid() {
   const foodGrid = document.getElementById("foodGrid");
   const foodCount = document.getElementById("foodCount");
@@ -350,6 +363,11 @@ function wireLookup() {
     .join("");
 
   nutrientSelect.addEventListener("change", () => {
+    if (nutrientSelect.value === "") {
+      renderLookupResult(null);
+      return;
+    }
+
     const index = Number(nutrientSelect.value);
     const food = Number.isNaN(index) ? null : foods[index];
     renderLookupResult(food);
@@ -357,14 +375,25 @@ function wireLookup() {
 }
 
 function calculateIntake(age, weight, height, gender, activity, goal) {
+  const proteinFloor = 0.8 * weight;
   let bmr = 10 * weight + 6.25 * height - 5 * age;
   if (gender === "male") bmr += 5;
   else if (gender === "female") bmr -= 161;
   else bmr -= 78;
 
-  let calories = bmr * activity;
-  if (goal === "loss") calories -= 300;
-  if (goal === "gain") calories += 300;
+  const tdee = bmr * activity;
+  let calories = tdee;
+  if (goal === "loss") calories = tdee * 0.85;
+  if (goal === "gain") calories = tdee * 1.12;
+
+  const calorieFloorByGender = {
+    female: 1200,
+    male: 1500,
+    other: 1350
+  };
+  const calorieFloor = calorieFloorByGender[gender] || 1350;
+  const caloriesBeforeFloor = calories;
+  calories = Math.max(calories, calorieFloor);
 
   const macroRatios = {
     maintain: { protein: 0.25, carbs: 0.45, fat: 0.3 },
@@ -373,13 +402,17 @@ function calculateIntake(age, weight, height, gender, activity, goal) {
   };
 
   const ratio = macroRatios[goal];
-  const proteinGrams = (calories * ratio.protein) / 4;
+  const proteinGrams = Math.max((calories * ratio.protein) / 4, proteinFloor);
   const carbsGrams = (calories * ratio.carbs) / 4;
   const fatGrams = (calories * ratio.fat) / 9;
-  const hydrationMl = weight * 35;
+  const hydrationMl = (weight * 35) + Math.max(0, (activity - 1.2) * 1000);
 
   return {
+    bmr,
+    tdee,
     calories,
+    caloriesBeforeFloor,
+    calorieFloor,
     proteinGrams,
     carbsGrams,
     fatGrams,
@@ -387,10 +420,23 @@ function calculateIntake(age, weight, height, gender, activity, goal) {
   };
 }
 
+function validateIntakeInput(age, weight, height) {
+  if (!age || !weight || !height) {
+    return "Please complete age, weight, and height to continue.";
+  }
+
+  if (age < 10 || age > 100 || weight < 25 || weight > 250 || height < 120 || height > 230) {
+    return "Please enter realistic values: age 10-100, weight 25-250 kg, height 120-230 cm.";
+  }
+
+  return "";
+}
+
 function wireCalculator() {
   const form = document.getElementById("intakeForm");
   const calcError = document.getElementById("calcError");
   const calcResults = document.getElementById("calcResults");
+  const calculateIntakeBtn = document.getElementById("calculateIntakeBtn");
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -403,27 +449,39 @@ function wireCalculator() {
     const activity = Number(document.getElementById("activity").value);
     const goal = document.getElementById("goal").value;
 
-    if (!age || !weight || !height || age < 10 || age > 100 || weight < 25 || weight > 250 || height < 120 || height > 230) {
-      calcError.textContent = "Please enter realistic values: age 10-100, weight 25-250 kg, height 120-230 cm.";
+    const validationError = validateIntakeInput(age, weight, height);
+    if (validationError) {
+      calcError.textContent = validationError;
       calcError.classList.remove("hidden");
       return;
     }
 
     const result = calculateIntake(age, weight, height, gender, activity, goal);
+    const floorNotice = result.caloriesBeforeFloor < result.calorieFloor
+      ? `<p class="mt-3 text-xs text-brand-clay/90">A minimum educational calorie floor (${result.calorieFloor} kcal) was applied for safer guidance.</p>`
+      : "";
 
     calcResults.innerHTML = `
       <h3 class="text-2xl font-heading">Your Daily Guidance</h3>
       <div class="mt-4 grid sm:grid-cols-2 gap-3 text-sm">
+        <div class="rounded-xl bg-brand-mist p-4"><p class="text-brand-deep/70">Estimated BMR</p><p class="text-xl font-bold">${Math.round(result.bmr)} kcal</p></div>
+        <div class="rounded-xl bg-brand-mist p-4"><p class="text-brand-deep/70">Estimated TDEE</p><p class="text-xl font-bold">${Math.round(result.tdee)} kcal</p></div>
         <div class="rounded-xl bg-brand-mist p-4"><p class="text-brand-deep/70">Estimated Calories</p><p class="text-xl font-bold">${Math.round(result.calories)} kcal</p></div>
         <div class="rounded-xl bg-brand-mist p-4"><p class="text-brand-deep/70">Hydration</p><p class="text-xl font-bold">${Math.round(result.hydrationMl / 1000 * 10) / 10} L/day</p></div>
         <div class="rounded-xl bg-brand-mist p-4"><p class="text-brand-deep/70">Protein</p><p class="text-xl font-bold">${Math.round(result.proteinGrams)} g</p></div>
         <div class="rounded-xl bg-brand-mist p-4"><p class="text-brand-deep/70">Carbs</p><p class="text-xl font-bold">${Math.round(result.carbsGrams)} g</p></div>
         <div class="rounded-xl bg-brand-mist p-4 sm:col-span-2"><p class="text-brand-deep/70">Fat</p><p class="text-xl font-bold">${Math.round(result.fatGrams)} g</p></div>
       </div>
+      ${floorNotice}
       <p class="mt-4 text-xs text-brand-deep/65">This is an educational estimate, not a medical prescription.</p>
     `;
   });
+
+  calculateIntakeBtn.addEventListener("click", () => {
+    calcError.classList.add("hidden");
+  });
 }
+
 
 function wireSwaps() {
   const swapBtn = document.getElementById("swapBtn");
@@ -444,7 +502,7 @@ function wireSwaps() {
 
 function renderHabits() {
   const habitList = document.getElementById("habitList");
-  const saved = JSON.parse(localStorage.getItem("nutrition-habits") || "{}");
+  const saved = readJsonStorage("nutrition-habits", {});
 
   habitList.innerHTML = habits
     .map((habit, index) => {
@@ -475,7 +533,7 @@ function wireHabits() {
     const checkbox = event.target;
     if (!(checkbox instanceof HTMLInputElement) || !checkbox.classList.contains("habit-checkbox")) return;
 
-    const saved = JSON.parse(localStorage.getItem("nutrition-habits") || "{}");
+    const saved = readJsonStorage("nutrition-habits", {});
     saved[checkbox.dataset.index] = checkbox.checked;
     localStorage.setItem("nutrition-habits", JSON.stringify(saved));
     updateHabitProgress();
