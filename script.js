@@ -37,6 +37,25 @@ const swaps = [
   ["Sweetened cereal", "Oats with fruit"]
 ];
 
+const swapImages = {
+  "Sugary soda": "assets/icons/water-drop.svg",
+  "Sparkling water with lemon": "assets/icons/water-drop.svg",
+  "Potato chips": "assets/images/snack-smart.svg",
+  "Roasted chickpeas": "assets/images/snack-smart.svg",
+  "White bread": "assets/images/grain-bowl.svg",
+  "Whole wheat bread": "assets/images/grain-bowl.svg",
+  "Candy bar": "assets/icons/heart-health.svg",
+  "Greek yogurt with berries": "assets/icons/apple.svg",
+  "Fried chicken": "assets/images/protein-plate.svg",
+  "Grilled chicken breast": "assets/images/protein-plate.svg",
+  "Ice cream": "assets/images/fruits-basket.svg",
+  "Frozen banana blend": "assets/images/fruits-basket.svg",
+  "Salted instant noodles": "assets/icons/nutrition-label.svg",
+  "Vegetable lentil soup": "assets/images/veggie-board.svg",
+  "Sweetened cereal": "assets/images/grain-bowl.svg",
+  "Oats with fruit": "assets/images/grain-bowl.svg"
+};
+
 const myths = [
   {
     myth: "Carbs are always bad.",
@@ -66,17 +85,20 @@ const myths = [
 
 const habits = [
   "Drink at least 6-8 glasses of water",
-  "Include vegetables in two meals",
-  "Choose one whole grain option",
+  "Add a vegetable to one meal",
+  "Choose one whole grain item",
   "Avoid sugary drinks today",
   "Eat at least one fruit",
-  "Check a food label before buying"
+  "Pause to check a food label"
 ];
 
 const state = {
   currentCategory: "all",
   searchText: ""
 };
+
+const habitRingRadius = 52;
+const habitRingCircumference = 2 * Math.PI * habitRingRadius;
 
 document.documentElement.classList.add("js-reveal");
 
@@ -496,7 +518,28 @@ function wireSwaps() {
     lastIndex = index;
 
     const [from, to] = swaps[index];
-    swapResult.innerHTML = `<span class='font-bold'>Swap:</span> ${from} <span class='opacity-80'>to</span> <span class='font-bold'>${to}</span>`;
+    const fromImage = swapImages[from] || "assets/icons/apple.svg";
+    const toImage = swapImages[to] || "assets/icons/apple.svg";
+
+    swapResult.innerHTML = `
+      <div class="swap-grid">
+        <div class="swap-item">
+          <img src="${fromImage}" alt="${from}" class="swap-item-image" loading="lazy" />
+          <div>
+            <p class="swap-item-label">Swap this</p>
+            <p class="swap-item-name">${from}</p>
+          </div>
+        </div>
+        <div class="swap-arrow" aria-hidden="true">→</div>
+        <div class="swap-item">
+          <img src="${toImage}" alt="${to}" class="swap-item-image" loading="lazy" />
+          <div>
+            <p class="swap-item-label">Try this</p>
+            <p class="swap-item-name">${to}</p>
+          </div>
+        </div>
+      </div>
+    `;
   });
 }
 
@@ -523,7 +566,23 @@ function updateHabitProgress() {
   const checkboxes = Array.from(document.querySelectorAll(".habit-checkbox"));
   const checked = checkboxes.filter((checkbox) => checkbox.checked).length;
   const progress = Math.round((checked / checkboxes.length) * 100) || 0;
-  document.getElementById("habitProgress").textContent = `${progress}%`;
+  const progressText = document.getElementById("habitProgress");
+  if (progressText) {
+    progressText.textContent = `${progress}%`;
+  }
+
+  const progressRing = document.querySelector(".progress-ring");
+  const progressFill = document.getElementById("habitProgressBar");
+  const progressLabel = document.getElementById("habitProgressLabel");
+  if (progressRing && progressFill) {
+    const offset = habitRingCircumference - (progress / 100) * habitRingCircumference;
+    progressRing.setAttribute("aria-valuenow", String(progress));
+    progressFill.style.strokeDasharray = `${habitRingCircumference}`;
+    progressFill.style.strokeDashoffset = `${offset}`;
+  }
+  if (progressLabel) {
+    progressLabel.textContent = `${progress}%`;
+  }
 }
 
 function wireHabits() {

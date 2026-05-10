@@ -152,3 +152,56 @@ Date: 2026-04-26
 ### Verification
 - Diagnostics report no errors in updated `style.css`, `index.html`, `login.html`, and `signup.html`.
 - Local smoke checks for `/index.html`, `/login.html`, and `/signup.html` return `HTTP 200`.
+
+## 12) Weekly Habit Tracker: Progress Bar
+
+### Request
+- Remove the tracker illustration and add an animated progress bar.
+
+### Changes Applied
+- Removed the hydration image from the tracker section in `index.html`.
+- Added a progress bar container (`.progress-track`) and fill element (`#habitProgressBar`).
+- Updated `script.js` to sync the bar width and `aria-valuenow` with the percentage.
+- Added progress bar styling and animation in `style.css`.
+
+## 13) Weekly Habit Tracker: Circular Progress
+
+### Request
+- Replace the linear bar with a round progress bar and ensure progress renders visibly.
+
+### Changes Applied
+- Replaced the linear bar markup in `index.html` with a circular SVG ring and numeric label.
+- Added circular progress styles in `style.css` (ring, label, shadow, animation).
+- Updated `script.js` to compute the SVG stroke offset and update the label text.
+
+## 14) Daily Habit Tracker + Progress Fix
+
+### Request
+- Make the tracker daily, fix circular progress updates, and improve this section.
+
+### Changes Applied
+- Renamed the section to **Daily Habit Tracker** and updated copy in `index.html`.
+- Updated habit list text to daily-focused actions in `script.js`.
+- Stabilized progress updates by using a constant circumference for the SVG ring.
+- Adjusted ARIA label to “Daily habit completion”.
+- Added subtle hover polish for habit items in `style.css`.
+
+## 15) Healthy Swap Section Improvements
+
+### Request
+- Fix unreadable swap text and improve the section design.
+
+### Changes Applied
+- Updated swap section layout to separate header and button for better alignment.
+- Added `.swap-card` and `.swap-result` styles for clearer contrast on gradient backgrounds.
+- Improved result text visibility in `script.js`.
+
+## 16) Swap Section: Black Text + Item Images
+
+### Request
+- Make swap section text black (except the button) and add images for both swap items.
+
+### Changes Applied
+- Updated `swap-card` to use a light background and black text for readability.
+- Rendered swap results as two item cards with images and labels in `script.js`.
+- Added styles for `.swap-grid`, `.swap-item`, and `.swap-item-image` in `style.css`.
